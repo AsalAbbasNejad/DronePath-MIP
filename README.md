@@ -1,74 +1,72 @@
 Multi Drone Building Inspection Routing
 
-This project solves a routing optimization problem for a consulting company that inspects buildings using drones. The company must visit a predefined set of 3D measurement points on the exterior of a building. There are 4 drones, they all start at a given base position, they take off simultaneously, each drone visits a subset of points, and all drones must return to base. The goal is to minimize the time taken by the slowest drone to complete its route.
+This project implements an optimization model for coordinating multiple autonomous drones to inspect the exterior of buildings. Each building instance provides a set of 3D measurement points that must be visited. Four drones start simultaneously from a fixed base point, each visits a distinct subset of locations, and all must return to the base. The objective is to minimize the total operation time, defined as the time of the last drone to complete its route.
 
-Two building instances are provided:
+The project solves two provided problem instances:
 
 Edificio1.csv
 
 Edificio2.csv
 
-Each file contains a collection of spatial coordinates that must be visited exactly once, and the program computes optimal drone tours according to the constraints and speed model of the drones 
+Problem Overview
 
-Small_Project_Description
+A consulting company deploys drones equipped with sensors and cameras to scan building surfaces. The inspection must satisfy these key constraints.
 
-Problem Summary
+Exactly four drones are available
 
-Exactly 4 drones are available.
+All drones start from a shared base point
 
-All drones start from a fixed base coordinate.
+Every point must be visited exactly once by one drone
 
-Each drone may travel through a limited connectivity graph defined by geometric rules.
+Each drone must return to the base
 
-Every measurement point must be visited once by exactly one drone.
+Movement speed is direction dependent
 
-Every drone must return to the base at the end of its tour.
+Upward flight: 1 m/s
 
-Movement time depends on vertical and horizontal velocity, including different speeds for upward and downward motion.
+Downward flight: 2 m/s
 
-The objective is to minimize the maximum completion time among all drones (minimax routing).
+Horizontal flight: 1.5 m/s
 
-Connectivity between points is allowed only if they meet geometric criteria from the problem statement. Entry points to the building grid are restricted as required in the assignment specification 
+Oblique movement time is determined based on dominant motion
 
-Small_Project_Description
+Drones may only travel between grid points that satisfy geometric connectivity rules
 
-Approach
+Only specific entry points allow access between the base and the building grid
 
-The problem is modeled as a mixed integer optimization problem using the mip Python library. The code includes:
+The objective is to minimize the maximum completion time among all drones
 
-Calculation of valid movement arcs based on problem rules.
+Solution Approach
 
-Travel time computation based on direction and movement type.
+The problem is formulated as a Mixed Integer Programming model using the mip library. The implementation includes:
 
-Filtering of reachable nodes from the base.
+Reading 3D point data from CSV files
 
-A minimax multi drone variant of the Traveling Salesman Problem.
+Constructing a connectivity graph based on geometric constraints
 
-MTZ constraints to eliminate subtours.
+Computing travel time between reachable coordinates according to vertical and horizontal speed limitations
 
-Extraction of drone routes after optimization.
+Filtering unreachable points through graph traversal
 
-All logic is implemented in main.py 
+Solving a minimax version of the multi drone Traveling Salesman Problem
 
-main
+Using MTZ constraints to eliminate subtours
+
+Extracting and printing final drone routes
+
+The solver returns feasible routes that collectively cover all measurement points while optimizing task duration.
 
 Requirements
 
-You need Python and the following packages:
+Python 3.8 or newer is recommended.
 
-numpy
-
-pandas
-
-mip
-
-Install with:
+Install dependencies:
 
 pip install numpy pandas mip
 
-How to Run
+Running the Program
 
-Unzip the submission folder, then run:
+Run the solver by providing one of the building CSV files as argument:
 
 python main.py Edificio1.csv
 
@@ -78,22 +76,11 @@ or
 python main.py Edificio2.csv
 
 
-The program automatically detects which instance is being solved, applies the correct base location and entry conditions, builds the optimization model, solves it, and prints the result.
+The program automatically detects the instance, loads building geometry, builds the optimization model, solves it, and prints the resulting drone paths.
 
 Output Format
 
-For each drone i, the program prints:
-
-Drone i: 0-a-b-c-...-0
-
-
-Where:
-
-0 is the base point.
-
-Intermediate numbers are point indices in the visited order.
-
-The route always returns to 0.
+The program prints one line per drone showing its route, starting from base point 0 and returning to it.
 
 Example:
 
@@ -103,20 +90,23 @@ Drone 3: 0-9-0
 Drone 4: 0-12-0
 
 
-This format follows the exact requirement of the assignment specification so that evaluators can automatically verify correctness 
+Each sequence represents the order of visited measurement nodes.
 
-Small_Project_Description
+Repository Structure
 
-File Structure
+main.py
+Core solver script containing optimization model, time calculations, connectivity logic, and output formatting.
 
-main.py solver and routing implementation
+Edificio1.csv
+First building inspection dataset.
 
-Edificio1.csv building instance 1
-
-Edificio2.csv building instance 2
+Edificio2.csv
+Second building inspection dataset.
 
 Notes
 
-If no feasible solution exists, the code safely handles it and avoids printing incorrect output.
+The solver automatically limits to reachable nodes
 
-Time limit and solver configuration can be adjusted in the code if needed.
+If no feasible solution exists, the script exits without incorrect output
+
+Computation time depends on instance complexity and solver limits
