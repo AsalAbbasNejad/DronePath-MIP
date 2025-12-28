@@ -1,6 +1,6 @@
 ![photo_2025-12-14_17-17-00](https://github.com/user-attachments/assets/ab25302f-7dd3-4bb2-b95d-4c41586eda74)
 
-##🚁 Multi Drone Building Inspection Routing
+🚁 ##Multi Drone Building Inspection Routing
 
 This project implements an optimization model for coordinating four autonomous drones to inspect building exteriors. Each building file provides a set of 3D measurement points that must be visited. All drones start together from a base, split the workload, and return to base. The goal is to minimize the total mission duration, meaning the time when the last drone lands back at base. ⏱️
 
