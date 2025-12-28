@@ -1,72 +1,55 @@
-Multi Drone Building Inspection Routing
+🚁 Multi Drone Building Inspection Routing
 
-This project implements an optimization model for coordinating multiple autonomous drones to inspect the exterior of buildings. Each building instance provides a set of 3D measurement points that must be visited. Four drones start simultaneously from a fixed base point, each visits a distinct subset of locations, and all must return to the base. The objective is to minimize the total operation time, defined as the time of the last drone to complete its route.
+This project implements an optimization model for coordinating four autonomous drones to inspect building exteriors. Each building file provides a set of 3D measurement points that must be visited. All drones start together from a base, split the workload, and return to base. The goal is to minimize the total mission duration, meaning the time when the last drone lands back at base. ⏱️
 
-The project solves two provided problem instances:
+Supported datasets
+📄 Edificio1.csv
+📄 Edificio2.csv
 
-Edificio1.csv
+🔍 Problem Overview
 
-Edificio2.csv
+A consulting company uses drones to scan building surfaces with cameras and sensors. The mission must respect these conditions:
 
-Problem Overview
+✔️ Four drones available
+✔️ Shared starting base point
+✔️ Every point visited exactly once
+✔️ Each drone must return to base
+✔️ Direction dependent speeds
+⬆️ Upward 1 m/s
+⬇️ Downward 2 m/s
+➡️ Horizontal 1.5 m/s
+✔️ Oblique motion handled by dominant movement time
+✔️ Strict geometric connectivity rules
+✔️ Restricted entry points between base and grid
+✔️ Objective is to minimize the slowest drone completion time
 
-A consulting company deploys drones equipped with sensors and cameras to scan building surfaces. The inspection must satisfy these key constraints.
+Optimization + geometry + physics working together. Nice. 🤓
 
-Exactly four drones are available
+🧠 Solution Approach
 
-All drones start from a shared base point
+This project uses a Mixed Integer Programming model powered by the mip library. Key steps include:
 
-Every point must be visited exactly once by one drone
+🗂️ Reading 3D coordinates from CSV
+🧭 Building connectivity graph from geometric rules
+🕑 Computing travel time from speed constraints
+🧹 Filtering unreachable nodes
+📐 Solving a minimax multi drone Traveling Salesman Problem
+🚫 Preventing subtours using MTZ constraints
+📤 Extracting and printing final drone paths
 
-Each drone must return to the base
+The solver produces efficient and valid drone routes.
 
-Movement speed is direction dependent
+⚙️ Requirements
 
-Upward flight: 1 m/s
+Python 3.8 or newer recommended.
 
-Downward flight: 2 m/s
-
-Horizontal flight: 1.5 m/s
-
-Oblique movement time is determined based on dominant motion
-
-Drones may only travel between grid points that satisfy geometric connectivity rules
-
-Only specific entry points allow access between the base and the building grid
-
-The objective is to minimize the maximum completion time among all drones
-
-Solution Approach
-
-The problem is formulated as a Mixed Integer Programming model using the mip library. The implementation includes:
-
-Reading 3D point data from CSV files
-
-Constructing a connectivity graph based on geometric constraints
-
-Computing travel time between reachable coordinates according to vertical and horizontal speed limitations
-
-Filtering unreachable points through graph traversal
-
-Solving a minimax version of the multi drone Traveling Salesman Problem
-
-Using MTZ constraints to eliminate subtours
-
-Extracting and printing final drone routes
-
-The solver returns feasible routes that collectively cover all measurement points while optimizing task duration.
-
-Requirements
-
-Python 3.8 or newer is recommended.
-
-Install dependencies:
+Install required packages:
 
 pip install numpy pandas mip
 
-Running the Program
+▶️ Running the Program
 
-Run the solver by providing one of the building CSV files as argument:
+Run using one of the building datasets:
 
 python main.py Edificio1.csv
 
@@ -76,13 +59,13 @@ or
 python main.py Edificio2.csv
 
 
-The program automatically detects the instance, loads building geometry, builds the optimization model, solves it, and prints the resulting drone paths.
+The script automatically detects the correct base setup and entry conditions for each building.
 
-Output Format
+📌 Output Format
 
-The program prints one line per drone showing its route, starting from base point 0 and returning to it.
+Each drone prints its full tour starting and ending at base point 0.
 
-Example:
+Example output:
 
 Drone 1: 0-4-11-17-2-0
 Drone 2: 0-5-6-3-7-0
@@ -90,23 +73,16 @@ Drone 3: 0-9-0
 Drone 4: 0-12-0
 
 
-Each sequence represents the order of visited measurement nodes.
+Clean, readable, easy to evaluate. ✔️
 
-Repository Structure
+📂 Repository Structure
 
-main.py
-Core solver script containing optimization model, time calculations, connectivity logic, and output formatting.
+🧠 main.py optimization solver and routing logic
+🏢 Edificio1.csv dataset 1
+🏙️ Edificio2.csv dataset 2
 
-Edificio1.csv
-First building inspection dataset.
+💡 Notes
 
-Edificio2.csv
-Second building inspection dataset.
-
-Notes
-
-The solver automatically limits to reachable nodes
-
-If no feasible solution exists, the script exits without incorrect output
-
-Computation time depends on instance complexity and solver limits
+🔎 Automatically ignores unreachable nodes
+❌ Safe handling of infeasible solutions
+⏳ Runtime depends on solver limits and geometry complexity
