@@ -77,9 +77,13 @@ Each drone prints its full tour starting and ending at base point 0.
 Example output:
 
 Drone 1: 0-4-11-17-2-0
+
 Drone 2: 0-5-6-3-7-0
+
 Drone 3: 0-9-0
+
 Drone 4: 0-12-0
+
 
 
 Clean, readable, easy to evaluate. ✔️
