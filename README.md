@@ -4,6 +4,7 @@ This project implements an optimization model for coordinating four autonomous d
 
 Supported datasets
 📄 Edificio1.csv
+
 📄 Edificio2.csv
 
 🔍 Problem Overview
@@ -39,12 +40,19 @@ Optimization + geometry + physics working together. Nice. 🤓
 This project uses a Mixed Integer Programming model powered by the mip library. Key steps include:
 
 🗂️ Reading 3D coordinates from CSV
+
 🧭 Building connectivity graph from geometric rules
+
 🕑 Computing travel time from speed constraints
+
 🧹 Filtering unreachable nodes
+
 📐 Solving a minimax multi drone Traveling Salesman Problem
+
 🚫 Preventing subtours using MTZ constraints
+
 📤 Extracting and printing final drone paths
+
 
 The solver produces efficient and valid drone routes.
 
@@ -91,11 +99,17 @@ Clean, readable, easy to evaluate. ✔️
 📂 Repository Structure
 
 🧠 main.py optimization solver and routing logic
+
 🏢 Edificio1.csv dataset 1
+
 🏙️ Edificio2.csv dataset 2
+
 
 💡 Notes
 
 🔎 Automatically ignores unreachable nodes
+
 ❌ Safe handling of infeasible solutions
+
 ⏳ Runtime depends on solver limits and geometry complexity
+
