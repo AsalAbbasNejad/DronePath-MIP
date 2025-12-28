@@ -11,16 +11,25 @@ Supported datasets
 A consulting company uses drones to scan building surfaces with cameras and sensors. The mission must respect these conditions:
 
 ✔️ Four drones available
+
 ✔️ Shared starting base point
+
 ✔️ Every point visited exactly once
+
 ✔️ Each drone must return to base
+
 ✔️ Direction dependent speeds
+
 ⬆️ Upward 1 m/s
 ⬇️ Downward 2 m/s
 ➡️ Horizontal 1.5 m/s
+
 ✔️ Oblique motion handled by dominant movement time
+
 ✔️ Strict geometric connectivity rules
+
 ✔️ Restricted entry points between base and grid
+
 ✔️ Objective is to minimize the slowest drone completion time
 
 Optimization + geometry + physics working together. Nice. 🤓
