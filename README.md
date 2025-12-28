@@ -1,6 +1,122 @@
-DronePath-MIP: Multi-Drone Inspection OptimizerThis repository provides a Mathematical Optimization solution for a fleet of $k=4$ drones tasked with analyzing building facades111111111. It implements a Mixed-Integer Programming (MIP) model to solve the Minimax Multi-Drone Traveling Salesman Problem (MDTSP)2222.🎯 Project ObjectiveThe goal is to determine optimal 3D trajectories such that every measurement point on a building grid is visited by exactly one drone, starting and ending at a common base333333333. The objective function minimizes the makespan—the total flight time of the last drone to return to base4444.⚙️ Technical Features1. Custom Kinematics & Travel TimesTravel times ($t_{ij}$) are calculated based on directional speed rules5555:Upward: 1.0 m/s6.Downward: 2.0 m/s7.Horizontal: 1.5 m/s8.Oblique: Calculated as $\max(\frac{\text{lateral distance}}{1.5}, \frac{\text{vertical distance}}{v_{\text{vertical}}})$9.2. Geometric Connectivity RulesThe model generates a sparse graph where nodes are only connected if101010101010101010:Euclidean distance $\le$ 4m11.Euclidean distance $\le$ 11m AND at least two coordinates differ by $\le$ 0.5m12.Base Connections: Drones can always travel between the base and specified "entry points" ($y \le -12.5$ for Building 1; $y \le -20$ for Building 2)13131313.3. Optimization Model (MIP)Implemented using python-mip, the formulation includes14:Makespan Linearization: Using dummy variable $T$15.Flow Conservation: Ensures drones enter and leave nodes correctly16.Subtour Elimination: Implements Miller-Tucker-Zemlin (MTZ) constraints to prevent disconnected cycles17.🚀 UsageThe script main.py is designed to be executed via terminal and accepts a CSV file containing $(x, y, z)$ coordinates as a command-line argument18181818.Terminal Commands:Bashpython main.py Edificio1.csv
-Standard Output Format:The program produces the optimal makespan followed by the sequence of points for each drone19:PlaintextOptimal Makespan (T): 145.24
-Drone 1: 0-14-11-23-...-0
-Drone 2: 0-5-6-9-...-0
-...
-🛠 RequirementsPython 3.xMIP Library: pip install mipNumPy & Pandas: pip install numpy pandas
+Multi Drone Building Inspection Routing
+
+This project solves a routing optimization problem for a consulting company that inspects buildings using drones. The company must visit a predefined set of 3D measurement points on the exterior of a building. There are 4 drones, they all start at a given base position, they take off simultaneously, each drone visits a subset of points, and all drones must return to base. The goal is to minimize the time taken by the slowest drone to complete its route.
+
+Two building instances are provided:
+
+Edificio1.csv
+
+Edificio2.csv
+
+Each file contains a collection of spatial coordinates that must be visited exactly once, and the program computes optimal drone tours according to the constraints and speed model of the drones 
+
+Small_Project_Description
+
+Problem Summary
+
+Exactly 4 drones are available.
+
+All drones start from a fixed base coordinate.
+
+Each drone may travel through a limited connectivity graph defined by geometric rules.
+
+Every measurement point must be visited once by exactly one drone.
+
+Every drone must return to the base at the end of its tour.
+
+Movement time depends on vertical and horizontal velocity, including different speeds for upward and downward motion.
+
+The objective is to minimize the maximum completion time among all drones (minimax routing).
+
+Connectivity between points is allowed only if they meet geometric criteria from the problem statement. Entry points to the building grid are restricted as required in the assignment specification 
+
+Small_Project_Description
+
+Approach
+
+The problem is modeled as a mixed integer optimization problem using the mip Python library. The code includes:
+
+Calculation of valid movement arcs based on problem rules.
+
+Travel time computation based on direction and movement type.
+
+Filtering of reachable nodes from the base.
+
+A minimax multi drone variant of the Traveling Salesman Problem.
+
+MTZ constraints to eliminate subtours.
+
+Extraction of drone routes after optimization.
+
+All logic is implemented in main.py 
+
+main
+
+Requirements
+
+You need Python and the following packages:
+
+numpy
+
+pandas
+
+mip
+
+Install with:
+
+pip install numpy pandas mip
+
+How to Run
+
+Unzip the submission folder, then run:
+
+python main.py Edificio1.csv
+
+
+or
+
+python main.py Edificio2.csv
+
+
+The program automatically detects which instance is being solved, applies the correct base location and entry conditions, builds the optimization model, solves it, and prints the result.
+
+Output Format
+
+For each drone i, the program prints:
+
+Drone i: 0-a-b-c-...-0
+
+
+Where:
+
+0 is the base point.
+
+Intermediate numbers are point indices in the visited order.
+
+The route always returns to 0.
+
+Example:
+
+Drone 1: 0-4-11-17-2-0
+Drone 2: 0-5-6-3-7-0
+Drone 3: 0-9-0
+Drone 4: 0-12-0
+
+
+This format follows the exact requirement of the assignment specification so that evaluators can automatically verify correctness 
+
+Small_Project_Description
+
+File Structure
+
+main.py solver and routing implementation
+
+Edificio1.csv building instance 1
+
+Edificio2.csv building instance 2
+
+Notes
+
+If no feasible solution exists, the code safely handles it and avoids printing incorrect output.
+
+Time limit and solver configuration can be adjusted in the code if needed.
